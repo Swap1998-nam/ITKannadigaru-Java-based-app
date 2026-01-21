@@ -7,16 +7,16 @@ pipeline{
     }
 
     environment {
-        IMAGE_NAME = "manojkrishnappa/itkannadigaru-blogpost:${GIT_COMMIT}"
+        IMAGE_NAME = "iamswapnil98/itkannadigaru-blogpost:${GIT_COMMIT}"
         AWS_REGION = "ap-south-1"
         CLUSTER_NAME = "itkannadigaru-cluster"
-        NAMESPACE = "itkannadigaru"
+        NAMESPACE = "microdegree"
     }
 
     stages{
         stage('git-checkout'){
             steps{
-                git url: 'https://github.com/ManojKRISHNAPPA/ITKannadigaru-Java-based-app.git', branch: 'prod'
+                git url: 'https://github.com/swap1998-nam/ITKannadigaru-Java-based-app.git', branch: 'prod'
             }
             
         }
@@ -82,7 +82,7 @@ pipeline{
 
         stage('Deploy to EKS cluster'){
             steps{
-                withKubeConfig(caCertificate: '', clusterName: 'itkannadigaru-cluster', contextName: '', credentialsId: 'kube', namespace: 'itkannadigaru', restrictKubeConfigAccess: false, serverUrl: 'https://F9B53AB4647378B291D4BE2833B0FFB1.gr7.us-west-2.eks.amazonaws.com'){
+                withKubeConfig(caCertificate: '', clusterName: 'itkannadigaru-cluster', contextName: '', credentialsId: 'kube', namespace: 'itkannadigaru', restrictKubeConfigAccess: false, serverUrl: 'https://CCEC902FBD545A5B11F9A59D4867CF6A.yl4.ap-south-1.eks.amazonaws.com'){
                     sh " sed -i 's|replace|${IMAGE_NAME}|g' deployment.yml "
                     sh " kubectl apply -f deployment.yml -n ${NAMESPACE}"
                 }
@@ -90,7 +90,7 @@ pipeline{
         }
         stage('verify'){
             steps{
-                withKubeConfig(caCertificate: '', clusterName: 'itkannadigaru-cluster', contextName: '', credentialsId: 'kube', namespace: 'itkannadigaru', restrictKubeConfigAccess: false, serverUrl: 'https://F9B53AB4647378B291D4BE2833B0FFB1.gr7.us-west-2.eks.amazonaws.com'){
+                withKubeConfig(caCertificate: '', clusterName: 'itkannadigaru-cluster', contextName: '', credentialsId: 'kube', namespace: 'itkannadigaru', restrictKubeConfigAccess: false, serverUrl: 'https://CCEC902FBD545A5B11F9A59D4867CF6A.yl4.ap-south-1.eks.amazonaws.com'){
                     sh " kubectl get pods -n ${NAMESPACE}"
                     sh " kubectl get svc -n ${NAMESPACE}"
                 }
